@@ -269,7 +269,236 @@ the other player's cards and adds them to the bottom of his deck. If there is a 
 two cards are eliminated from play (this differs from the actual game, but is simpler 
 to program). The game ends when one player runs out of cards.
 '''
-
+"""
+class Card:
+    def __init__(self,value,suit):
+        self.value=value
+        self.suit=suit
+    def __str__(self):
+        names=["Jack","Queen","King","Ace"]
+        if self.value <= 10:
+            return '{} of {} '.format(self.value,self.suit)
+        else:
+            return '{} of {} '.format(names[self.value-11],self.suit)
+import random
+class CardGroup:
+    def __init__(self,cards=[]):
+        self.cards=cards
+    def next_card(self):
+        return self.cards.pop(0)
+    def has_card(self):
+        return len(self.cards)>0
+    def size(self):
+        return len(self.cards)
+    def shuffle(self):
+        random.shuffle(self.cards)
+class StandardDeck(CardGroup):
+    def __init__(self):
+        self.cards=[]
+        for s in ["Hearts","Diamonds","Clubs","Spades"]:
+            for v in range(2,15):
+                self.cards.append(Card(v,s))
+class War(StandardDeck):
+    def __init__(self):
+        StandardDeck.__init__(self)
+        class Players(CardGroup):
+            def __init__(p_self):
+                p_self.mycards=[]
+            def create_group(p_self):
+                CardGroup.__init__(p_self,p_self.mycards)
+                
+        self.player=Players()
+        self.computer=Players()
+        CardGroup.__init__(self,self.cards)
+        self.shuffle()
+        for i in range(len(self.cards)):
+            if i%2==0:
+                self.player.mycards.append(self.cards[i])
+                
+            else:
+                self.computer.mycards.append(self.cards[i])
+        self.player.create_group()
+        self.computer.create_group()
+    def start(self):
+        while len(self.player.mycards)!=0 and len(self.computer.mycards):
+            input("Hit enter to know your card")
+            player_card=self.player.next_card()
+            computer_card=self.computer.next_card()
+            print("you:",player_card)
+            print("computer's card:",computer_card)
+            if player_card.value == computer_card.value:
+                print("draw")
+            elif player_card.value > computer_card.value:
+                print("you win this round!")
+                self.player.mycards.append(player_card)
+                self.player.mycards.append(computer_card)
+            elif player_card.value < computer_card.value:
+                print("you loose this round")
+                self.computer.mycards.append(computer_card)
+                self.computer.mycards.append(player_card)
+        if len(self.player.mycards)==0 and len(self.computer.mycards)==0:
+            print("war draw")
+        elif len(self.player.mycards)>0:
+            print("you win the war!!!")
+        elif len(self.player.mycards)==0:
+            print("you loose the war!!!")
+war1=War()
+war1.start()
+"""
 #8
 '''
+Write a class that inherits from the Card_group class of this chapter. The class should 
+represent a deck of cards that contains only hearts and spaces, with only the cards 2 
+through 10 in each suit. Add a method to the class called next2 that returns the top 
+two cards from the deck.
 '''
+"""
+class Card:
+    def __init__(self,value,suit):
+        self.value=value
+        self.suit=suit
+    def __str__(self):
+        names=["Jack","Queen","King","Ace"]
+        if self.value <= 10:
+            return '{} of {} '.format(self.value,self.suit)
+        else:
+            return '{} of {} '.format(names[self.value-11],self.suit)
+import random
+class CardGroup:
+    def __init__(self,cards=[]):
+        self.cards=cards
+    def next_card(self):
+        return self.cards.pop(0)
+    def has_card(self):
+        return len(self.cards)>0
+    def size(self):
+        return len(self.cards)
+    def shuffle(self):
+        random.shuffle(self.cards)
+class Deck(CardGroup):
+    def __init__(self):
+        suits=["Hearts","Spades"]
+        CardGroup.__init__(self)
+        for suit in suits:
+            for number in range(2,11):
+                self.cards.append(Card(number,suit))
+        self.shuffle()
+    def next2(self):
+        return [self.cards[0],self.cards[1]]
+new_deck=Deck()
+card_1,card_2=new_deck.next2()
+print("the top 2 cards in the deck are:")
+print(card_1,card_2,sep=",")
+"""
+#9
+'''
+Write a class called Rock_paper_scissors that implements the logic of the game 
+Rock-paper-scissors. For this game the user plays against the computer for a certain 
+number of rounds. Your class should have fields for the how many rounds there will 
+be, the current round number, and the number of wins each player has. There should 
+be methods for getting the computer's choice, finding the winner of a round, and 
+checking to see if someone has one the (entire) game. You may want more methods.
+'''
+"""
+from random import choice
+class RockPaperScissors:
+    choices=["rock","paper","scissors"]
+    def __init__(self,rounds):
+        self.rounds=rounds
+        self.current_round=0
+        self.player_wins=0
+        self.computer_wins=0
+    @staticmethod
+    def get_computer_choice():
+        return choice([0,1,2])
+    def find_round_winner(self):
+        self.current_round+=1
+        print("round {} of {}".format(self.current_round,self.rounds))
+        computer=RockPaperScissors.get_computer_choice()
+        player=int(input("enter the number corresponding to your choice:"))
+        print("computer:{}\nyou:{}".format(RockPaperScissors.choices[computer],RockPaperScissors.choices[player]))
+        if computer==player:
+            return "draw"
+        elif RockPaperScissors.choices[computer]=="rock" and RockPaperScissors.choices[player]=="paper":
+            self.player_wins+=1
+            return "you win the round!"
+        elif RockPaperScissors.choices[computer]=="paper" and RockPaperScissors.choices[player]=="scissors":
+            self.player_wins+=1
+            return "you win the round!"
+        elif RockPaperScissors.choices[computer]=="scissors" and RockPaperScissors.choices[player]=="rock":
+            self.player_wins+=1
+            return "you win the round!"
+        elif RockPaperScissors.choices[player]=="rock" and RockPaperScissors.choices[computer]=="paper":
+            self.computer_wins+=1
+            return "you loose the round!"
+        elif RockPaperScissors.choices[player]=="paper" and RockPaperScissors.choices[computer]=="scissors":
+            self.computer_wins+=1
+            return "you loose the round!"
+        elif RockPaperScissors.choices[player]=="scissors" and RockPaperScissors.choices[computer]=="rock":
+            self.computer_wins+=1
+            return "you loose the round!"
+    def winner(self):
+        if self.player_wins==self.computer_wins:
+            return "game draw"
+        elif self.player_wins>self.computer_wins:
+            return "you win the game!!!"
+        elif self.player_wins<self.computer_wins:
+            return "computer wins the game!!"
+rounds=int(input("enter the total number of rounds:"))
+game=RockPaperScissors(rounds)
+print("\nenter:\n0 for rock \n1 for paper \n2 for scissors\n")
+while game.current_round<game.rounds:
+    print(game.find_round_winner())
+print(game.winner())
+"""
+#10
+'''
+a. Write a class called Connect4 that implements the logic of a Connect4 game. 
+Use the Tic_tac_toe class from this chapter as a starting point.
+b. Use the Connect4 class to create a simple text-based version of the game.
+'''
+class tic_tac_toe:
+    def __init__(self):
+        self.b=[[0,0,0],[0,0,0],[0,0,0]]
+        self.player=1
+    def get_open_spots(self):
+        return [[r,c] for r in range(3) for c in range(3) if self.b[r][c]==0]
+    def is_valid_move(self,r,c):
+        if 0<=r<=2 and 0<=c<=2 and self.b[r][c]==0:
+            return True
+        return False
+    def make_moves(self,r,c):
+        if self.is_valid_move(r,c):
+            self.b[r][c]=self.player
+            self.player=(self.player+2)%2+1
+    def check_for_winner(self):
+        for c in range(3):
+            if self.b[0][c]==self.b[1][c]==self.b[2][c]!=0:
+                return self.b[0][c]
+        for r in range(3):
+            if self.b[r][0]==self.b[r][1]==self.b[r][2]!=0:
+                return self.b[r][0]
+        if self.b[0][0]==self.b[1][1]==self.b[2][2]!=0:
+                return self.b[0][0]
+        if self.b[2][0]==self.b[1][1]==self.b[0][2]!=0:
+                return self.b[2][0]
+        if self.get_open_spots()==[]:
+                return 0
+        return -1
+def print_board():
+    chars=['-','x','o']
+    for r in range(3):
+        for c in range(3):
+            print(chars[game.b[r][c]],end=" ")
+        print("")
+game=tic_tac_toe()
+while game.check_for_winner()==-1:
+    print_board()
+    r,c=eval(input('enter spot,player '+str(game.player)+": "))
+    game.make_moves(r,c)
+print_board()
+x=game.check_for_winner()
+if x==0:
+    print("It's a draw")
+else:
+    print(f"player {x} wins")

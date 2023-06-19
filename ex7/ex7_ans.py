@@ -5,7 +5,7 @@ When this function is called the implementing class should determine if the give
 Create a class "SimpleTester" that inherits "PrimeTester" and uses a naive method
 to determine if a given number is a prime or not.
 '''
-"""
+
 class PrimeTester:
     def isPrime(self,n):
         if n==2:
@@ -29,7 +29,7 @@ class SimpleTester(PrimeTester):
 n=int(input("Enter a number:"))
 obj=SimpleTester()
 obj.prime(n)
-"""
+
 
 #2
 '''
@@ -372,6 +372,7 @@ Input: {1, 2, 100, 10}, k = 1
 Output: 113
 We do not need to flip any elements
 '''
+"""
 from itertools import combinations
 
 class Input:
@@ -406,3 +407,4 @@ arr=eval(input("Enter a array of integers:"))
 k=int(input("Enter the value of k:"))
 obj=SubArray(arr,k)
 print("maximum sum:",obj.maximum_sub_array(obj.arr,obj.k))
+"""
