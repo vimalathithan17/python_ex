@@ -372,7 +372,8 @@ Input: {1, 2, 100, 10}, k = 1
 Output: 113
 We do not need to flip any elements
 '''
-from math import factorial
+from itertools import combinations
+
 class Input:
     def __init__(self):
         self.arr=[]
@@ -380,29 +381,28 @@ class Input:
         self.arr=arr
 class SubArray(Input):
     def __init__(self,arr,k):
-        Input.__init__(self):
+        Input.__init__(self)
         self.set(arr)
         self.k=k
     def maximum_sub_array(self,arr,k):
         arr=tuple(arr)
         max_sum=0
-        combinations=factorial(len(arr))/(factorial(k)*factorial(len(arr)-k)
-        for i in range(combinations):
-            new_arr=list(arr)
-            for j in range(k):
-                
-            start=0
-            end=1
-            while start!=len(new_arr) or end!=len(new_arr):
-                if end<len(new_arr):
-                    sum_=sum(new_arr[start:end])
-                    end+=1
-                elif start<len(new_arr):
-                    sum_=sum(new_arr[start:end])
-                    start_+=1
-                if sum_>max_sum:
+        for length in range(1,len(arr)+1):
+            for sub_arr in combinations(arr,length):
+                sum_=sum(sub_arr)
+                if max_sum<sum_:
                     max_sum=sum_
+        for i in combinations(arr,k):
+           modified=list(arr)
+           for j in i:
+               modified[modified.index(j)]=-modified[modified.index(j)]
+           for length in range(1,len(modified)+1):
+               for sub_arr in combinations(modified,length):
+                   sum_=sum(sub_arr)
+                   if max_sum<sum_:
+                       max_sum=sum_
+        return max_sum
 arr=eval(input("Enter a array of integers:"))
 k=int(input("Enter the value of k:"))
 obj=SubArray(arr,k)
-obj.maximum_sub_array(obj.arr,obj.k)
+print("maximum sum:",obj.maximum_sub_array(obj.arr,obj.k))
