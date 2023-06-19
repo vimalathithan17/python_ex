@@ -85,3 +85,28 @@ while len(l)!=20:
     numbers+=1
 print(l)
 '''
+class PrimeTester:
+    def isPrime(self,n):
+        if n==2:
+            return 0
+        else:
+            c=0
+            for i in range(2,n):
+                if(n%i==0):
+                    c=1
+                    return 1
+            if c==0:
+                return 0
+                
+class SimpleTester(PrimeTester):
+    def prime(self,n):
+        b=self.isPrime(n)
+        if(b==0):
+            print("Prime number found")
+        else:
+            print("Prime number not found")
+n=int(input("Enter a number"))
+pr=SimpleTester()
+pr.prime(n)
+
+

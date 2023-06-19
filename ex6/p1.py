@@ -138,57 +138,138 @@ o palindromes() — returns a list of all the palindromes in the list
 o only(L) — returns a list of the words that contain only those letters in L
 o avoids(L) — returns a list of the words that contain none of the letters in L
 '''
+"""
 class Wordplay:
+    @staticmethod
+    def removes(result,string):
+        if None in result:
+            result=list(set(result))
+            result.remove(None)
+            if len(result)==0:
+                return "there are no words "+string
+            else:
+                return result
+        elif len(result)==0:
+            return "there are no words "+string
+        else:
+            return result
     def __init__(self,words):
         self.word_list=[]+words
     def words_with_length(self,length):
         result = list(map(lambda x:x if len(x)==length else None,self.word_list))
-        result if None not in result else result.remove(None)
+        result=Wordplay.removes(result,f"that has length {length}")
         return result
     def starts_with(self,s):
         result=list(map(lambda x:x if x[0]==s else None,self.word_list))
-        result if None not in result else result.remove(None)
+        result=Wordplay.removes(result,f"that starts with '{s}'")
         return result
     def ends_with(self,s):
         result=list(map(lambda x:x if x[-1]==s else None,self.word_list))
-        result if None not in result else result.remove(None)
+        result=Wordplay.removes(result,f"that ends with '{s}'")
         return result
     def palindromes(self):
         result=list(map(lambda x:x if x==x[::-1] else None,self.word_list))
-        result if None not in result else result.remove(None)
+        result=Wordplay.removes(result,"that are palindrome")
         return result
     def only(self,l):
-        l=list(set(l))
-        count=dict()
-        for i in self.word_list:
-            count[i]=0
-        keys=count.keys()
-        for i in l:
-            for key in keys:
-                if i in key:
-                    count[key]+=1
+        l_="".join(list(l))
+        l="".join(sorted(list(set(l))))
         result=[]
-        for key in keys:
-            if count[key]==len(l):
-                result.append(key)
+        for word in self.word_list:
+            word_="".join(sorted(list(set(word))))
+            if l==word_:
+                result.append(word)
+        result=Wordplay.removes(result,f"that only contain the letters in '{l_}'")
         return result
     def avoids(self,l):
-        l=list(set(l))
-        count=dict()
-        for i in self.word_list:
-            count[i]=0
-        keys=count.keys()
-        for i in l:
-            for key in keys:
-                if i in key:
-                    count[key]+=1
+        l_="".join(list(l))
+        l="".join(sorted(list(set(l))))
         result=[]
-        for key in keys:
-            if count[key]==0:
-                result.append(count[key])
+        for word in self.word_list:
+            word_="".join(sorted(list(set(word))))
+            if l not in word_:
+                result.append(word)
+        result=Wordplay.removes(result,f"that dosent contain any of the letters in '{l_}'")
         return result
-    
-c=Wordplay(["hell","dell"])
-#print(c.words_with_length(4))
-#print(c.starts_with('d'))
-print(c.only('del'))
+words=eval(input("Enter a list of word:"))
+c=Wordplay(words)
+length=int(input("Enter a length:"))
+print(f"the words with length {length} are ",c.words_with_length(length))
+starting_letter=input("Enter the a character:")
+print(f"the words which start with letter {starting_letter} are:",c.starts_with(starting_letter))
+ending_letter=input("Enter the a character:")
+print(f"the words which ends with letter {ending_letter} are:",c.ends_with(ending_letter))
+print("the palindromes are:",c.palindromes())
+a_word=input("Enter a Word:")
+print(f"the words that only cointain the letters in '{a_word}' are:",c.only(a_word))
+print(f"the words that does not cointain any of the letters in '{a_word}' are:",c.avoids(a_word))
+"""
+#6
+'''
+Write a class called Converter. The user will pass a length and a unit when declaring 
+an object from the class—for example, c = Converter(9, 'inches'). The possible 
+units are inches, feet, yards, miles, kilometers, meters, centimeters, and millimeters. 
+For each of these units there should be a method that returns the length converted 
+into those units. For example, using the Converter object created above, the user 
+could call c.feet() and should get 0.75 as the result
+'''
+"""
+class Converter:
+    def __init__(self,value,unit):
+        self.value=value
+        self.unit=unit
+    def inches(self):
+        value_in_meters=self.meters(intermediate=True)
+        return 'the equivalent of {} {} is {} inches'.format(self.value,self.unit,value_in_meters*39.37)
+    def feet(self):
+        value_in_meters=self.meters(intermediate=True)
+        return 'the equivalent of {} {} is {} feet'.format(self.value,self.unit,value_in_meters*3.2808)
+    def yards(self):
+        value_in_meters=self.meters(intermediate=True)
+        return 'the equivalent of {} {} is {} yards'.format(self.value,self.unit,value_in_meters*1.0936)
+    def miles(self): 
+        value_in_meters=self.meters(intermediate=True)
+        return 'the equivalent of {} {} is {} miles'.format(self.value,self.unit,value_in_meters*0.000621)
+    def kilometers(self):
+        value_in_meters=self.meters(intermediate=True)
+        return 'the equivalent of {} {} is {} kilometers'.format(self.value,self.unit,value_in_meters*0.001)
+    def meters(self,intermediate=False):
+        conversion_factor={"inches":0.0254,"feet":0.3048,"yards":0.9144,"miles":1609.344,"kilometers":1000,"metres":1,"centimeters":0.01,"millimeters":0.001}
+        if intermediate:
+            return self.value*conversion_factor[self.unit]
+        else:
+            return 'the equivalent of {} {} is {} meters'.format(self.value,self.unit,self.value*conversion_factor[self.unit])
+    def centimeters(self):
+        value_in_meters=self.meters(intermediate=True)
+        return 'the equivalent of {} {} is {} centimeters'.format(self.value,self.unit,value_in_meters*100)
+    def millimeters(self):
+        value_in_meters=self.meters(intermediate=True)
+        return 'the equivalent of {} {} is {} millimeters'.format(self.value,self.unit,value_in_meters*1000)
+print("Converter")
+print("the available units are:")
+print("1.inches")
+print("2.feet")
+print("3.yards")
+print("4.miles")
+print("5.kilometers")
+print("6.meters")
+print("7.centimeters")
+print("8.millimeters")
+value,unit=input("enter the value and unit seperated by a space:").split()
+convert_to=input("wnter the unit to which you want to convert the above value to:")
+c=Converter(float(value),unit)
+print(getattr(c,convert_to)())
+"""
+#7
+'''
+Use the Standard_deck class of this section to create a simplified version of the 
+game War. In this game, there are two players. Each starts with half of a deck. The 
+players each deal the top card from their decks and whoever has the higher card wins 
+the other player's cards and adds them to the bottom of his deck. If there is a tie, the 
+two cards are eliminated from play (this differs from the actual game, but is simpler 
+to program). The game ends when one player runs out of cards.
+'''
+
+#8
+'''
+'''
